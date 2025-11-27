@@ -1,0 +1,14 @@
+; Ejemplo: dividir AX entre BX con manejo de división por cero
+MOV AX, 25 ; Numerador
+MOV BX, 0 ; Divisor
+; Verificar si BX es cero
+TEST BX, BX
+JZ DIV_ZERO ; Saltar si divisor es 0
+DIV BX ; Realizar división
+JMP END ; Saltar al final
+DIV_ZERO:
+; Manejo del error de división por 0
+MOV DX, OFFSET MSG_ERROR
+CALL PRINT_STRING
+END:
+; Continuar con el programa
