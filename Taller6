@@ -1,0 +1,21 @@
+msg_menor db "El primer numero es menor", 10
+len_menor equ $ - msg_menor
+msg_no_menor db "El primer numero NO es menor", 10
+len_no_menor equ $ - msg_no_menor
+section .text
+global _start
+_start:
+; Cargar dos valores a comparar
+mov eax, 5 ; Primer número (puedes cambiarlo)
+mov ebx, 10 ; Segundo número
+
+cmp eax, ebx ; Compara EAX con EBX (EAX - EBX)
+jl es_menor ; Si EAX < EBX (con signo), salta a 'es_menor'
+no_menor:
+; Imprimir "El primer numero NO es menor"
+mov eax, 4 ; syscall write
+mov ebx, 1 ; stdout
+mov ecx, msg_no_menor
+mov edx, len_no_menor
+int 0x80
+jmp fin ; Saltar al final del programa
