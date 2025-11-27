@@ -1,0 +1,23 @@
+section .data
+buf db 0 ; Buffer para almacenar el carácter
+len equ 1
+section .text
+global _start
+_start:
+; Construir el carácter 'A' usando solo sumas
+xor eax, eax ; Limpiar registro eax
+mov al, 50 ; al = 50
+
+add al, 10 ; al = 60
+add al, 5 ; al = 65 ('A')
+mov [buf], al ; Guardar en buffer
+; Llamada al sistema para escribir en pantalla (stdout)
+mov eax, 4 ; sys_write
+mov ebx, 1 ; descriptor stdout
+mov ecx, buf ; dirección del buffer
+mov edx, len ; longitud = 1 byte
+int 0x80 ; interrupción para llamada al sistema
+; Salir del programa
+mov eax, 1 ; sys_exit
+xor ebx, ebx ; código 0
+int 0x80
