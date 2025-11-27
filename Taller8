@@ -1,0 +1,211 @@
+"Comprador de Numeros"
+MOV AX, A
+MOV BX, B
+CMP AX, BX
+
+JE iguales
+JG a_mayor_b
+JL b_mayor_a
+
+; también verificar si alguno es negativo:
+CMP AX, 0
+JL a_negativo
+
+CMP BX, 0
+JL b_negativo
+
+JMP fin
+
+iguales:
+; imprimir "Son iguales"
+JMP fin
+
+a_mayor_b:
+; imprimir "A es mayor"
+JMP fin
+
+b_mayor_a:
+; imprimir "B es mayor"
+JMP fin
+
+a_negativo:
+; imprimir "A es negativo"
+JMP fin
+
+b_negativo:
+; imprimir "B es negativo"
+JMP fin
+
+fin:
+
+"Clasificacion de numeros"
+MOV AX, N
+
+CMP AX, 0
+JE es_cero
+JL es_negativo
+JG es_positivo
+
+es_cero:
+; imprimir "Cero"
+JMP fin
+
+es_negativo:
+; imprimir "Negativo"
+JMP fin
+
+es_positivo:
+; imprimir "Positivo"
+JMP fin
+
+fin:
+
+"Par o impar"
+; leer N
+
+MOV AL, N
+TEST AL, 1 ; afecta PF
+
+JP es_par ; JP = salta si PF = 1
+JNP es_impar ; JNP = salta si PF = 0
+
+es_par:
+; imprimir "Par"
+JMP fin
+
+es_impar:
+; imprimir "Impar"
+JMP fin
+
+fin:
+
+"Simulacion de overflow"
+; leer A, leer B
+
+MOV AX, A
+MOV BX, B
+
+ADD AX, BX ; puede activar OF
+
+JO overflow ; JO = Jump if Overflow=1
+JNO no_overflow ; JNO = Jump if Overflow=0
+
+overflow:
+; imprimir "Hubo overflow"
+JMP fin
+
+no_overflow:
+; imprimir "No hubo overflow"
+JMP fin
+
+fin:
+
+"Simulacion de Acarreo"
+; leer A, leer B
+
+MOV AX, A
+MOV BX, B
+ADD AX, BX ; puede activar CF
+
+JC hubo_carry ; JC = salta si Carry=1
+JNC no_carry ; JNC = salta si Carry=0
+
+hubo_carry:
+; imprimir "Hubo acarreo"
+JMP fin
+
+no_carry:
+; imprimir "No hubo acarreo"
+JMP fin
+
+fin:
+
+"Minimo y maximo de tres "
+
+; leer A, B, C
+
+MOV AX, A
+MOV BX, B
+MOV CX, C
+
+; MAX
+MOV DX, AX
+
+CMP DX, BX
+JL bx_es_mayor
+CMP DX, CX
+JL cx_es_mayor
+JMP max_listo
+
+bx_es_mayor:
+MOV DX, BX
+CMP DX, CX
+JL cx_es_mayor
+JMP max_listo
+
+cx_es_mayor:
+MOV DX, CX
+
+max_listo:
+; DX = máximo
+
+; MIN
+MOV SI, AX
+CMP SI, BX
+JG bx_es_menor
+CMP SI, CX
+JG cx_es_menor
+
+JMP min_listo
+
+bx_es_menor:
+MOV SI, BX
+CMP SI, CX
+JG cx_es_menor
+JMP min_listo
+
+cx_es_menor:
+MOV SI, CX
+
+min_listo:
+; SI = mínimo
+
+"Ordenamiento de dos numeros"
+; leer A, B
+
+MOV AX, A
+MOV BX, B
+CMP AX, BX
+
+JG intercambiar ; si A > B, intercambiamos
+JMP fin
+
+intercambiar:
+MOV CX, AX
+MOV AX, BX
+MOV BX, CX
+; ahora AX <= BX
+
+fin:
+
+"Ciclo de conteo sin comparaciones"
+MOV AL, 0
+
+inicio:
+; imprimir AL
+
+INC AL ; suma 1, afecta ZF si llega a 0 y CF si
+pasa 255
+
+CMP AL, 10 ; no se permiten comparaciones →
+alternativa:
+; Usar una técnica sin CMP:
+
+; método: restar 10 y ver si hubo borrow (CF)
+MOV BL, AL
+SUB BL, 10
+JC fin ; si BL < 0 → termina
+
+JMP inicio
+
+fin:
