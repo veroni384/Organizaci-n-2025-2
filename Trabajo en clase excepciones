@@ -1,0 +1,87 @@
+ION .text
+GLOBAL _start
+
+_start:
+
+    ; -------------------------------------------
+    ; Inicializamos "estado"
+    ; -------------------------------------------
+    MOV ERROR_FLAG, 0         ; 0 = OK, 1 = ERROR
+    MOV ERROR_CODE, 0
+
+TRY_BEGIN:
+  
+
+    CALL LOGICA_PRINCIPAL     ; puede fallar
+
+    CMP EAX, 0                 ; ¿regresó OK?
+    JE TRY_OK                  ; si EAX == 0 → OK
+                               ; si no → es error
+
+    ; Simular THROW
+    MOV ERROR_FLAG, 1
+    MOV ERROR_CODE, EAX
+    JMP CATCH_BLOCK
+
+
+TRY_OK:
+    JMP FINALLY_BLOCK         ; continuar flujo norma 
+
+
+CATCH_BLOCK:
+    CMP ERROR_FLAG, 1
+    JNE FINALLY_BLOCK          ; si no hay error, saltar
+
+    CMP ERROR_CODE, 10
+    JE HANDLE_ERROR_10
+
+    CMP ERROR_CODE, 20
+    JE HANDLE_ERROR_20
+
+    ; Error genérico
+    CALL HANDLE_ERROR_GENERIC
+    JMP FINALLY_BLOCK
+
+
+HANDLE_ERROR_10:
+    CALL PRINT_ERR_10
+    JMP FINALLY_BLOCK
+
+HANDLE_ERROR_20:
+    CALL PRINT_ERR_20
+    JMP FINALLY_BLOCK
+
+
+
+FINALLY_BLOCK:
+    CALL LIMPIAR_RECURSOS
+
+    ; continuar flujo normal
+    JMP END_PROGRAMl
+LOGICA_PRINCIPAL:
+    ; esta función genera un error de ejemplo
+    MOV EAX, 20      ; "código de error"
+    RET
+
+HANDLE_ERROR_GENERIC:
+    ; mensaje ficticio
+    RET
+
+PRINT_ERR_10:
+    RET
+
+PRINT_ERR_20:
+    RET
+
+LIMPIAR_RECURSOS:
+    ; limpieza general
+    RET
+
+END_PROGRAM:
+    ; aquí finalizaría el programa real
+    RET
+
+
+; Variables simuladas
+ERROR_FLAG:  DB 0
+ERROR_CODE:  DB 0
